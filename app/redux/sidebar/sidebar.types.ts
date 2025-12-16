@@ -15,4 +15,5 @@ export interface SidebarNodeType {
   parentReference?: SidebarNodeType | null;
   keyName?: string;
   depth?: number;
+  content?: string;
 }

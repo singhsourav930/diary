@@ -1,7 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
-import { SidebarNodeType, SidebarStateType } from './sidebar.types';
-import { SIDEBAR_NODES_DATA } from './sidebar.constants';
+import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
+import { SidebarNodeType, SidebarStateType } from "./sidebar.types";
+import { SIDEBAR_NODES_DATA } from "./sidebar.constants";
 
 const initialState = {
   nodes: SIDEBAR_NODES_DATA,
@@ -11,16 +11,22 @@ const initialState = {
 } as SidebarStateType;
 
 const sidebarSlice = createSlice({
-  name: 'sidebar',
+  name: "sidebar",
   initialState,
   reducers: {
     setNodesAction(state, action: PayloadAction<SidebarNodeType[]>) {
       state.nodes = action.payload;
     },
-    setSelectedNodeAction(state, action: PayloadAction<SidebarNodeType | null>) {
+    setSelectedNodeAction(
+      state,
+      action: PayloadAction<SidebarNodeType | null>
+    ) {
       state.selectedNode = action.payload;
     },
-    setOutlineSelectedNodeAction(state, action: PayloadAction<SidebarNodeType | null>) {
+    setOutlineSelectedNodeAction(
+      state,
+      action: PayloadAction<SidebarNodeType | null>
+    ) {
       state.outlineSelectedNode = action.payload;
     },
     setOpenNodesAction(state, action: PayloadAction<string[]>) {
@@ -35,7 +41,5 @@ export const {
   setOpenNodesAction,
   setOutlineSelectedNodeAction,
 } = sidebarSlice.actions;
-
-
 
 export default sidebarSlice.reducer;
