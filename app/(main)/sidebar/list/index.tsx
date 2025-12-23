@@ -18,11 +18,16 @@ import { openMenu } from "@/app/redux/menu/menu.logic";
 import FolderIcon from "@/app/assets/icons/folder";
 import FileIcon from "@/app/assets/icons/file";
 import { setOpenTabs } from "@/app/redux/mainContent/mainContent.logic";
+import TempSelectIcon from "@/app/assets/icons/tempSelect";
 
 function SidebarList() {
   const nodes = useSelector((state: RootState) => state.sidebar.nodes);
-  const selectedNode = useSelector((state: RootState) => state.sidebar.selectedNode);
-  const outlineSelectedNode = useSelector((state: RootState) => state.sidebar.outlineSelectedNode);
+  const selectedNode = useSelector(
+    (state: RootState) => state.sidebar.selectedNode
+  );
+  const outlineSelectedNode = useSelector(
+    (state: RootState) => state.sidebar.outlineSelectedNode
+  );
   const openNodes = useSelector((state: RootState) => state.sidebar.openNodes);
 
   const parentReferenceNode = selectedNode?.parentReference ?? null;
@@ -139,7 +144,14 @@ function SidebarList() {
               {isFolder && (
                 <CarrotIcon className={cn({ "rotate-90": isNodeOpen })} />
               )}
-              {isFolder ? <FolderIcon /> : <FileIcon />}
+              {isFolder && !isTemporaryOrRenaming && <FolderIcon />}
+              {!isFolder && (
+                <div>
+                  {isTemporaryOrRenaming && <TempSelectIcon />}
+                  {!isTemporaryOrRenaming && <FileIcon />}
+                </div>
+              )}
+
               {isTemporaryOrRenaming ? (
                 <input
                   name="name"

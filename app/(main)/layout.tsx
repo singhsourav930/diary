@@ -10,15 +10,15 @@ export default function MainLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div>
+    <div className="flex flex-col h-screen overflow-hidden">
       <ReduxProvider>
         <Header />
-        <div className="flex">
+        <div className="flex flex-1 overflow-hidden">
           <Sidebar />
-          <div className="w-full">
+          <main className="flex-1 min-w-0 relative flex flex-col">
             <MainContent />
-            {children}
-          </div>
+            <div className="hidden">{children}</div>
+          </main>
         </div>
         <Footer />
       </ReduxProvider>

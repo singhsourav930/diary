@@ -18,12 +18,22 @@ const mainContentSlice = createSlice({
     setActiveTabIdAction(state, action: PayloadAction<string | null>) {
       state.activeTabId = action.payload;
     },
+    updateTabContentAction(
+      state,
+      action: PayloadAction<{ id: string; content: string }>
+    ) {
+      const tab = state.openTabs.find((t) => t.id === action.payload.id);
+      if (tab) {
+        tab.content = action.payload.content;
+      }
+    },
   },
 });
 
 export const {
   setOpenTabsAction,
   setActiveTabIdAction,
+  updateTabContentAction,
 } = mainContentSlice.actions;
 
 export default mainContentSlice.reducer;

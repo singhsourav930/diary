@@ -32,6 +32,24 @@ const sidebarSlice = createSlice({
     setOpenNodesAction(state, action: PayloadAction<string[]>) {
       state.openNodes = action.payload;
     },
+    updateNodeContentAction(
+      state,
+      action: PayloadAction<{ id: string; content: string }>
+    ) {
+      const updateContent = (nodes: SidebarNodeType[]) => {
+        for (const node of nodes) {
+          if (node.id === action.payload.id) {
+            node.content = action.payload.content;
+            return true;
+          }
+          if (node.children && updateContent(node.children)) {
+            return true;
+          }
+        }
+        return false;
+      };
+      updateContent(state.nodes);
+    },
   },
 });
 
@@ -40,6 +58,7 @@ export const {
   setSelectedNodeAction,
   setOpenNodesAction,
   setOutlineSelectedNodeAction,
+  updateNodeContentAction,
 } = sidebarSlice.actions;
 
 export default sidebarSlice.reducer;

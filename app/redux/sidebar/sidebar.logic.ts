@@ -4,10 +4,12 @@ import {
   setOpenNodesAction,
   setNodesAction,
   setOutlineSelectedNodeAction,
+  updateNodeContentAction,
 } from "./sidebar.slice";
 import { SidebarNodeType, SidebarStateType } from "./sidebar.types";
 import { AppDispatch, RootState, store } from "../store";
 import { ACTIVE_KEY_OR_STATE } from "./sidebar.constants";
+import { setOpenTabs } from "../mainContent/mainContent.logic";
 
 export const dispatch = () => store.dispatch as AppDispatch;
 export const getState = () => store.getState() as RootState;
@@ -64,6 +66,7 @@ export const createNode = (node: SidebarNodeType) => {
 
     const newNodes = updatedNodes(nodes, nodeId);
     setNodes(newNodes);
+    setOutlineSelectedNode(null);
   } else {
     setNodes(insertNodeInOrder(node, nodes));
   }
@@ -97,9 +100,7 @@ export const updateNode = (node: SidebarNodeType) => {
     isTemporary?: boolean;
     isRenaming?: boolean;
   }): SidebarNodeType[] => {
-    const sortedNodes =
-      !isTemporary && !isRenaming ? sortNodesByName(nodesList) : nodesList;
-    return sortedNodes.map((nodeItem) => {
+    const nextNodes = nodesList.map((nodeItem) => {
       if (nodeItem.id === nodeId) {
         let updatedName = node.name;
         if (node.keyName === ACTIVE_KEY_OR_STATE.ESCAPE) {
@@ -120,6 +121,7 @@ export const updateNode = (node: SidebarNodeType) => {
       }
       return nodeItem;
     });
+    return !isTemporary && !isRenaming ? sortNodesByName(nextNodes) : nextNodes;
   };
 
   const newNodes = updatedNodes({
@@ -156,7 +158,6 @@ export const updateNode = (node: SidebarNodeType) => {
       };
       const newNodes = updatedNodes(nodes, node.id);
       setNodes(newNodes);
-      setSelectedNode(null);
     } else if (
       (node.keyName === ACTIVE_KEY_OR_STATE.BLUR ||
         node.keyName === ACTIVE_KEY_OR_STATE.ENTER) &&
@@ -166,6 +167,7 @@ export const updateNode = (node: SidebarNodeType) => {
       setNodes(newNodes);
       setSelectedNode(node);
       setOutlineSelectedNode(node);
+      setOpenTabs(node);
     }
   } else if (
     (node.keyName === ACTIVE_KEY_OR_STATE.BLUR ||
@@ -173,6 +175,7 @@ export const updateNode = (node: SidebarNodeType) => {
     Boolean(node.name.trim())
   ) {
     const newNodes = updatedNodes({ nodesList: nodes, nodeId: node.id });
+    setOpenTabs(node);
     setNodes(newNodes);
   } else if (node.keyName === ACTIVE_KEY_OR_STATE.ESCAPE) {
     const newNodes = updatedNodes({ nodesList: nodes, nodeId: node.id });
@@ -350,4 +353,8 @@ export const getFlattenedNodes = (
   };
   flatter(nodes || [], parentReferenceNode, 0);
   return results;
+};
+
+export const updateNodeContent = (id: string, content: string) => {
+  dispatch()(updateNodeContentAction({ id, content }));
 };

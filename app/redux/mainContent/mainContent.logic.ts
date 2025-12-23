@@ -1,7 +1,16 @@
-import { dispatch, getState, setSelectedNode } from "../sidebar/sidebar.logic";
+import {
+  dispatch,
+  getState,
+  setSelectedNode,
+  updateNodeContent,
+} from "../sidebar/sidebar.logic";
 import { SidebarNodeType } from "../sidebar/sidebar.types";
 import { MainContentStateType } from "./mainContent.types";
-import { setActiveTabIdAction, setOpenTabsAction } from "./mainContent.slice";
+import {
+  setActiveTabIdAction,
+  setOpenTabsAction,
+  updateTabContentAction,
+} from "./mainContent.slice";
 
 export const setOpenTabs = (node: SidebarNodeType) => {
   const state = getState();
@@ -16,7 +25,15 @@ export const setOpenTabs = (node: SidebarNodeType) => {
       return tab;
     });
   } else {
-    newOpenTabs = [...newOpenTabs, { id: node.id, name: node.name, content: node.content, isFolder: node.isFolder }];
+    newOpenTabs = [
+      ...newOpenTabs,
+      {
+        id: node.id,
+        name: node.name,
+        content: node.content,
+        isFolder: node.isFolder,
+      },
+    ];
   }
   dispatch()(setOpenTabsAction(newOpenTabs));
 };
@@ -36,4 +53,9 @@ export const removeActiveTab = (node: SidebarNodeType) => {
   } else if (activeTabId === node.id) {
     setActiveTabId(newOpenTabs[0].id);
   }
+};
+
+export const updateTabContent = (id: string, content: string) => {
+  dispatch()(updateTabContentAction({ id, content }));
+  updateNodeContent(id, content);
 };
